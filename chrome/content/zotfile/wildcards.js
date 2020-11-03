@@ -7,6 +7,7 @@ Zotero.ZotFile.Wildcards = new function() {
 
     var _this = this;
     this.emptyCollectionPlaceholder = "EMPTY_COLLECTION_NAME";
+    const chinese_re = new RegExp("[\u4E00-\u9FA5]+");
 
     /*
      * Abbreviation field using Zotero's getAbbreviation function
@@ -23,6 +24,14 @@ Zotero.ZotFile.Wildcards = new function() {
 
 	    return abbrv;
     }
+
+    function getCreatorCiteName(creator) {
+        if (chinese_re.test(creator.lastName)) {
+            return `${creator.lastName}${creator.firstName}`;
+        } else {
+            return `${creator.lastName}`;
+        }
+    };
 
     /*
      * Performs a binary search that returns the index of the array before which the
@@ -148,8 +157,9 @@ Zotero.ZotFile.Wildcards = new function() {
         var j = 0;
         for (i = 0; i < creators.length; ++i) {
             if (j < numauthors && creatorTypeIDs.indexOf(creators[i].creatorTypeID) != -1) {
-                if (author !== "") author += delimiter + creators[i].lastName;
-                if (author === "") author = creators[i].lastName;
+                const citeName = getCreatorCiteName(creators[i]);
+                if (author !== "") author += delimiter + citeName;
+                if (author === "") author = citeName;
                 var lastf =  creators[i].lastName + creators[i].firstName.substr(0, 1).toUpperCase();
                 if (author_lastf !== "") author_lastf += delimiter + lastf;
                 if (author_lastf === "") author_lastf = lastf;
