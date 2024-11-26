@@ -29,7 +29,7 @@ Zotero.ZotFile.Wildcards = new function() {
         if (chinese_re.test(creator.lastName)) {
             return `${creator.lastName}${creator.firstName}`;
         } else {
-            return `${creator.lastName}`;
+            return `${creator.lastName} ${creator.firstName}`;
         }
     };
 
